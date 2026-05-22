@@ -11,15 +11,12 @@ jobs:
     name: ${{ matrix.target }}
     runs-on: ${{ matrix.os }}
     strategy:
+      fail-fast: false
       matrix:
         include:
           - os: ubuntu-latest
             target: x86_64-unknown-linux-gnu
             binary: zippy-linux-x64
-            ext: ""
-          - os: ubuntu-latest
-            target: x86_64-unknown-linux-musl
-            binary: zippy-linux-x64-musl
             ext: ""
           - os: macos-latest
             target: x86_64-apple-darwin
@@ -51,7 +48,10 @@ jobs:
 
       - name: Strip binary (Linux/macOS)
         if: runner.os != 'Windows'
-        run: strip target/${{ matrix.target }}/release/zippy
+        run: |
+          if command -v strip &>/dev/null; then
+            strip target/${{ matrix.target }}/release/zippy
+          fi
 
       - name: Upload artifact
         uses: actions/upload-artifact@v4
