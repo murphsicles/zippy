@@ -1,0 +1,18 @@
+Package: zippy
+Version: 0.1.0
+Section: devel
+Priority: optional
+Architecture: amd64
+Maintainer: The Zeta Foundation <murphsicles@proton.me>
+Homepage: https://z-lang.org
+Description: Zeta compiler installer — install the Zeta programming language
+ Zippy is the Zeta toolchain installer. One command, one click, zero friction.
+ It downloads, installs, and configures the Zeta compiler (zetac) on your system.
+ .
+ Features:
+  - One-command Zeta installation
+  - Automatic PATH configuration
+  - Version management (install, update, list, default)
+  - Diagnostic tools (zippy doctor)
+  - Clean uninstall (zippy uninstall)
+  - Beautiful terminal UI matching the Zeta amber palette

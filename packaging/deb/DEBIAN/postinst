@@ -1,0 +1,40 @@
+#!/bin/bash
+# postinst — run after .deb package installation
+# Automatically installs the Zeta compiler via zippy
+
+set -e
+
+echo ""
+echo "  ╔════════════════════════════════════╗"
+echo "  ║        ███████╗███████╗████████╗   ║"
+echo "  ║        ╚══███╔╝╚══███╔╝╚══███╔╝   ║"
+echo "  ║          ███╔╝   ███╔╝   ███╔╝    ║"
+echo "  ║         ███╔╝   ███╔╝   ███╔╝     ║"
+echo "  ║        ███████╗███████╗███████╗    ║"
+echo "  ║        ╚══════╝╚══════╝╚══════╝    ║"
+echo "  ║     Zeta Compiler Installation     ║"
+echo "  ╚════════════════════════════════════╝"
+echo ""
+
+if command -v zetac &>/dev/null; then
+    echo "  ✓ Zeta already installed"
+    echo "  Run 'zippy update' to check for newer versions."
+    exit 0
+fi
+
+echo "  ▶ Installing Zeta compiler..."
+if zippy install --no-path 2>&1; then
+    echo ""
+    echo "  ✓ Zeta installed successfully!"
+    echo ""
+    echo "  Open a new terminal and run:"
+    echo "    zetac --version"
+    echo "    zetac --zorb search nour"
+    echo ""
+    echo "  z-lang.org  ·  zorbs.io/docs"
+else
+    echo ""
+    echo "  ⚠ Could not auto-install Zeta."
+    echo "  Run 'zippy install' manually."
+fi
+echo ""
