@@ -49,18 +49,20 @@ jobs:
       - name: Build release
         run: cargo build --release --target ${{ matrix.target }}
 
-      - name: Strip binary (Linux/macOS)
-        if: runner.os != 'Windows'
+      - name: Strip and rename binary
         run: |
-          if command -v strip &>/dev/null; then
-            strip target/${{ matrix.target }}/release/zippy
+          SRC="target/${{ matrix.target }}/release/zippy${{ matrix.ext }}"
+          DST="${{ matrix.binary }}${{ matrix.ext }}"
+          if command -v strip &>/dev/null && [ "${{ runner.os }}" != "Windows" ]; then
+            strip "$SRC"
           fi
+          mv "$SRC" "$DST"
 
       - name: Upload artifact
         uses: actions/upload-artifact@v4
         with:
           name: ${{ matrix.binary }}
-          path: target/${{ matrix.target }}/release/zippy${{ matrix.ext }}
+          path: ${{ matrix.binary }}${{ matrix.ext }}
 
   release:
     name: Release
@@ -77,7 +79,7 @@ jobs:
 
       - name: Build .deb
         run: |
-          cp artifacts/zippy-linux-x64/zippy packaging/deb/usr/local/bin/zippy
+          cp artifacts/zippy-linux-x64/zippy-linux-x64 packaging/deb/usr/local/bin/zippy
           chmod 755 packaging/deb/usr/local/bin/zippy
           chmod 755 packaging/deb/DEBIAN/postinst
           dpkg-deb --build packaging/deb zippy_${{ github.ref_name }}_amd64.deb
@@ -88,9 +90,9 @@ jobs:
           tag_name: ${{ github.ref_name }}
           fail_on_unmatched_files: false
           files: |
-            artifacts/zippy-linux-x64/*
-            artifacts/zippy-macos-x64/*
-            artifacts/zippy-macos-arm64/*
-            artifacts/zippy-windows-x64/*
+            artifacts/zippy-linux-x64/zippy-linux-x64
+            artifacts/zippy-macos-x64/zippy-macos-x64
+            artifacts/zippy-macos-arm64/zippy-macos-arm64
+            artifacts/zippy-windows-x64/zippy-windows-x64.exe
             zippy_${{ github.ref_name }}_amd64.deb
           generate_release_notes: true
