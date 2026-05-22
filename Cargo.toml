@@ -1,0 +1,32 @@
+[package]
+name = "zippy"
+version = "0.1.0"
+edition = "2021"
+description = "Zeta toolchain installer — fast, beautiful, zero-friction"
+authors = ["Dark Factory <murphsicles@proton.me>"]
+repository = "https://github.com/murphsicles/zippy"
+license = "MIT"
+
+[[bin]]
+name = "zippy"
+path = "src/main.rs"
+
+[dependencies]
+clap = { version = "4", features = ["derive"] }
+reqwest = { version = "0.12", default-features = false, features = ["rustls-tls", "stream"] }
+indicatif = "0.17"
+console = "0.15"
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+sha2 = "0.10"
+dirs = "5"
+tokio = { version = "1", features = ["full"] }
+futures-util = "0.3"
+tempfile = "3"
+
+[profile.release]
+opt-level = "z"     # Optimize for size
+lto = true
+codegen-units = 1
+strip = true
+panic = "abort"
