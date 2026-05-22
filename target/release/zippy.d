@@ -1,1 +1,0 @@
-/home/zeta/.openclaw/workspace/zippy/target/release/zippy: /home/zeta/.openclaw/workspace/zippy/src/install.rs /home/zeta/.openclaw/workspace/zippy/src/main.rs /home/zeta/.openclaw/workspace/zippy/src/platform.rs /home/zeta/.openclaw/workspace/zippy/src/ui.rs /home/zeta/.openclaw/workspace/zippy/src/update.rs
