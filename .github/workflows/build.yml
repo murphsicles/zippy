@@ -50,10 +50,11 @@ jobs:
         run: cargo build --release --target ${{ matrix.target }}
 
       - name: Strip and rename binary
+        shell: bash
         run: |
           SRC="target/${{ matrix.target }}/release/zippy${{ matrix.ext }}"
           DST="${{ matrix.binary }}${{ matrix.ext }}"
-          if command -v strip &>/dev/null && [ "${{ runner.os }}" != "Windows" ]; then
+          if command -v strip &>/dev/null && [ "$RUNNER_OS" != "Windows" ]; then
             strip "$SRC"
           fi
           mv "$SRC" "$DST"
