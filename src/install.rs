@@ -39,14 +39,32 @@ pub async fn run(
     ui::step_ok(&format!("~/.zeta/ ({})", install_root.display()));
 
     // ── Step 3: Download zetac ──────────────────────────────────────────────
-    let download_url = format!(
+    let dest_path = bin_dir.join("zetac");
+
+    // Try release asset first, then fall back to raw bin/ on main branch
+    let release_url = format!(
         "https://github.com/{}/releases/download/{}/{}",
         ZETA_REPO, version, target.binary_name
     );
-    let dest_path = bin_dir.join("zetac");
+    let raw_bin_name = match target.binary_name.as_str() {
+        "zetac-linux-x64" => "zetac",
+        "zetac-linux-arm64" => "zetac-linux-arm64",
+        "zetac-macos-x64" => "zetac-macos-x64",
+        "zetac-macos-arm64" => "zetac-macos-arm64",
+        "zetac-windows-x64.exe" => "zetac.exe",
+        "zetac-windows-arm64.exe" => "zetac-arm64.exe",
+        other => other,
+    };
+    let raw_url = format!(
+        "https://raw.githubusercontent.com/{}/main/bin/{}",
+        ZETA_REPO, raw_bin_name
+    );
 
     ui::step("Downloading zetac...");
-    download_file(&download_url, &dest_path, Some(target.binary_name.as_str())).await?;
+    if let Err(e) = download_file(&release_url, &dest_path, Some(target.binary_name.as_str())).await {
+        ui::info(&format!("Release download failed, trying raw binary..."));
+        download_file(&raw_url, &dest_path, Some(raw_bin_name)).await?;
+    }
     ui::step_ok(&format!("{} ({})", target.binary_name, version));
 
     // ── Step 4: Make executable ─────────────────────────────────────────────
